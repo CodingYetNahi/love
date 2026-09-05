@@ -2,127 +2,363 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#ff5f8f" />
-  <title>Do You Love Me?</title>
+  <meta name="description" content="A tiny little love question, made with a lot of heart." />
+  <title>Do You Love Me? 💗</title>
   <style>
+    :root {
+      --pink: #ff5f8f;
+      --pink-dark: #d83f72;
+      --ink: #3b1f2b;
+      --muted: #74495a;
+      --surface: rgba(255, 255, 255, 0.92);
+      --border: rgba(255, 95, 143, 0.22);
+    }
+
     * { box-sizing: border-box; }
+
+    html { color-scheme: light; }
+
     body {
       margin: 0;
       min-height: 100vh;
+      min-height: 100dvh;
       display: grid;
       place-items: center;
-      padding: 24px;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #fff0f5, #ffe4ec, #fff8fb);
-      color: #3b1f2b;
+      overflow-x: hidden;
+      padding: max(20px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+      font-family: Inter, ui-rounded, "SF Pro Rounded", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(255, 181, 205, 0.55), transparent 30%),
+        radial-gradient(circle at 85% 80%, rgba(255, 214, 230, 0.7), transparent 34%),
+        linear-gradient(145deg, #fff7fa 0%, #ffe8f0 50%, #fff9fb 100%);
     }
+
+    body::before,
+    body::after {
+      content: "♥";
+      position: fixed;
+      z-index: -1;
+      color: rgba(255, 95, 143, 0.08);
+      font-size: clamp(140px, 28vw, 320px);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    body::before { top: -70px; left: -45px; transform: rotate(-16deg); }
+    body::after { right: -55px; bottom: -90px; transform: rotate(18deg); }
+
     .card {
-      width: min(100%, 440px);
-      background: rgba(255, 255, 255, 0.94);
-      border: 1px solid rgba(255, 95, 143, 0.2);
-      border-radius: 28px;
-      padding: 30px;
+      width: min(100%, 470px);
+      padding: clamp(24px, 6vw, 38px);
       text-align: center;
-      box-shadow: 0 20px 60px rgba(91, 31, 53, 0.14);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      box-shadow: 0 24px 70px rgba(105, 41, 67, 0.16);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
-    .heart { font-size: 54px; margin-bottom: 8px; }
-    h1 { margin: 0 0 10px; font-size: clamp(28px, 8vw, 40px); }
-    p { line-height: 1.55; color: #6f4051; }
+
+    .heart {
+      width: 76px;
+      height: 76px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      font-size: 43px;
+      background: linear-gradient(145deg, #fff, #ffe0eb);
+      box-shadow: 0 12px 30px rgba(255, 95, 143, 0.17);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 8vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+
+    p {
+      margin: 10px 0;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .question {
+      margin-top: 14px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .field { margin-top: 22px; text-align: left; }
+
+    label {
+      display: block;
+      margin: 0 0 8px 3px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
     input {
       width: 100%;
-      margin-top: 12px;
+      min-height: 52px;
       padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid #efbfd0;
-      font: inherit;
+      border: 1px solid #ebbdce;
+      border-radius: 15px;
       outline: none;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--ink);
+      font: inherit;
+      font-size: 16px;
+      transition: border-color .18s ease, box-shadow .18s ease;
     }
-    input:focus { border-color: #ff5f8f; box-shadow: 0 0 0 3px rgba(255, 95, 143, 0.15); }
-    .actions { display: flex; gap: 12px; margin-top: 18px; }
+
+    input:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 4px rgba(255, 95, 143, 0.13);
+    }
+
+    .error {
+      min-height: 20px;
+      margin: 7px 3px 0;
+      font-size: 13px;
+      color: #b42350;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
     button {
       flex: 1;
+      min-height: 50px;
       border: 0;
-      border-radius: 14px;
-      padding: 14px 18px;
+      border-radius: 15px;
+      padding: 13px 16px;
       font: inherit;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
-      transition: transform .15s ease, opacity .15s ease;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
     }
+
     button:hover { transform: translateY(-1px); }
-    .primary { background: #ff5f8f; color: white; }
-    .secondary { background: #f7e5ec; color: #6b2d43; }
-    .hidden { display: none; }
-    #message { margin-top: 18px; font-weight: 700; color: #9e3159; }
-    .small { margin-top: 18px; font-size: 13px; opacity: .75; }
+    button:active { transform: translateY(1px) scale(.99); }
+    button:focus-visible { outline: 3px solid rgba(216, 63, 114, 0.28); outline-offset: 3px; }
+    button:disabled { cursor: default; opacity: .65; transform: none; }
+
+    .primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+      box-shadow: 0 10px 24px rgba(216, 63, 114, 0.24);
+    }
+
+    .secondary {
+      color: #6b2d43;
+      background: #f8e7ed;
+      box-shadow: inset 0 0 0 1px rgba(107, 45, 67, 0.05);
+    }
+
+    .restart {
+      width: 100%;
+      margin-top: 14px;
+      color: var(--muted);
+      background: transparent;
+      box-shadow: none;
+      font-weight: 700;
+    }
+
+    .hidden { display: none !important; }
+
+    #message {
+      min-height: 52px;
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-weight: 750;
+      line-height: 1.45;
+      color: #8f2f53;
+      background: rgba(255, 236, 243, 0.7);
+    }
+
+    #message:empty { display: none; }
+
+    .small {
+      margin: 22px 0 0;
+      font-size: 12px;
+      opacity: .65;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-5px) scale(1.03); }
+    }
+
+    @media (max-width: 420px) {
+      .card { border-radius: 24px; }
+      .actions { flex-direction: column; }
+      .actions button { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <main class="card">
-    <div class="heart">💗</div>
+  <main class="card" aria-labelledby="pageTitle">
+    <div class="heart" aria-hidden="true">💗</div>
 
     <section id="nameStep">
-      <h1>Hey there ❤️</h1>
-      <p>What is your name?</p>
-      <input id="nameInput" type="text" maxlength="40" autocomplete="name" placeholder="Your name" />
-      <div class="actions">
-        <button class="primary" id="continueBtn">Continue</button>
-      </div>
+      <h1 id="pageTitle">Hey there ❤️</h1>
+      <p>I have a tiny question for you.</p>
+
+      <form id="nameForm" novalidate>
+        <div class="field">
+          <label for="nameInput">First, what should I call you?</label>
+          <input
+            id="nameInput"
+            name="name"
+            type="text"
+            maxlength="40"
+            autocomplete="name"
+            enterkeyhint="done"
+            placeholder="Your name"
+            aria-describedby="nameError"
+            required
+          />
+          <div id="nameError" class="error" aria-live="polite"></div>
+        </div>
+        <div class="actions">
+          <button class="primary" type="submit">Continue 💌</button>
+        </div>
+      </form>
     </section>
 
-    <section id="loveStep" class="hidden">
+    <section id="loveStep" class="hidden" aria-labelledby="greeting">
       <h1 id="greeting">I have a question for you.</h1>
-      <p>Do you love me?</p>
-      <div class="actions">
-        <button class="primary" id="yesBtn">Yes 💖</button>
-        <button class="secondary" id="noBtn">No 🙈</button>
+      <p class="question">Do you love me? 🥺</p>
+      <div class="actions" id="answerActions">
+        <button class="primary" id="yesBtn" type="button">Yes 💖</button>
+        <button class="secondary" id="noBtn" type="button">No 🙈</button>
       </div>
-      <div id="message" aria-live="polite"></div>
+      <div id="message" role="status" aria-live="polite"></div>
+      <button id="restartBtn" class="restart hidden" type="button">Start again ↻</button>
     </section>
 
-    <p class="small">Made with ❤️</p>
+    <p class="small">Made with an unreasonable amount of ❤️</p>
   </main>
 
   <script>
-    const nameStep = document.getElementById('nameStep');
-    const loveStep = document.getElementById('loveStep');
-    const nameInput = document.getElementById('nameInput');
-    const greeting = document.getElementById('greeting');
-    const message = document.getElementById('message');
-    const noBtn = document.getElementById('noBtn');
+    (() => {
+      const nameStep = document.getElementById('nameStep');
+      const loveStep = document.getElementById('loveStep');
+      const nameForm = document.getElementById('nameForm');
+      const nameInput = document.getElementById('nameInput');
+      const nameError = document.getElementById('nameError');
+      const greeting = document.getElementById('greeting');
+      const message = document.getElementById('message');
+      const yesBtn = document.getElementById('yesBtn');
+      const noBtn = document.getElementById('noBtn');
+      const restartBtn = document.getElementById('restartBtn');
 
-    function startQuestion() {
-      const name = nameInput.value.trim() || 'cutie';
-      greeting.textContent = `Hello ${name}, I have a question for you.`;
-      nameStep.classList.add('hidden');
-      loveStep.classList.remove('hidden');
-    }
+      let noClicks = 0;
+      let finished = false;
 
-    document.getElementById('continueBtn').addEventListener('click', startQuestion);
-    nameInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') startQuestion();
-    });
-
-    document.getElementById('yesBtn').addEventListener('click', () => {
-      message.textContent = 'I love you my sweet big dhungi ❤️';
-      noBtn.classList.add('hidden');
-    });
-
-    let noClicks = 0;
-    noBtn.addEventListener('click', () => {
-      noClicks += 1;
-      if (noClicks === 1) {
-        message.textContent = 'Shembade, khadoos, nay karat ka prem? Gap Yes var click kar 😌';
-        noBtn.textContent = 'Nit vichar karun sang 😏';
-      } else if (noClicks === 2) {
-        message.textContent = 'Khota khota na 😄';
-        noBtn.textContent = 'Are you sure? 🙈';
-      } else {
-        message.textContent = 'Mala mahitiye, majhi sweet booboo loves little dhungi. I love you my sweet big dhungi ❤️';
-        noBtn.classList.add('hidden');
+      function cleanName(value) {
+        return value.replace(/\s+/g, ' ').trim();
       }
-    });
+
+      function showLoveStep(name) {
+        greeting.textContent = `Hello ${name}, I have one important question…`;
+        nameStep.classList.add('hidden');
+        loveStep.classList.remove('hidden');
+        yesBtn.focus();
+      }
+
+      function finish(text) {
+        if (finished) return;
+        finished = true;
+        message.textContent = text;
+        yesBtn.disabled = true;
+        noBtn.disabled = true;
+        restartBtn.classList.remove('hidden');
+        restartBtn.focus();
+      }
+
+      function resetApp() {
+        noClicks = 0;
+        finished = false;
+        nameForm.reset();
+        nameError.textContent = '';
+        message.textContent = '';
+        noBtn.textContent = 'No 🙈';
+        yesBtn.disabled = false;
+        noBtn.disabled = false;
+        restartBtn.classList.add('hidden');
+        loveStep.classList.add('hidden');
+        nameStep.classList.remove('hidden');
+        nameInput.focus();
+      }
+
+      nameForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const name = cleanName(nameInput.value);
+
+        if (!name) {
+          nameError.textContent = 'Come on, at least tell me your name 😄';
+          nameInput.setAttribute('aria-invalid', 'true');
+          nameInput.focus();
+          return;
+        }
+
+        nameInput.removeAttribute('aria-invalid');
+        nameError.textContent = '';
+        showLoveStep(name);
+      });
+
+      nameInput.addEventListener('input', () => {
+        if (nameError.textContent && cleanName(nameInput.value)) {
+          nameError.textContent = '';
+          nameInput.removeAttribute('aria-invalid');
+        }
+      });
+
+      yesBtn.addEventListener('click', () => {
+        finish('I love you too, my sweet big dhungi ❤️');
+      });
+
+      noBtn.addEventListener('click', () => {
+        if (finished) return;
+        noClicks += 1;
+
+        if (noClicks === 1) {
+          message.textContent = 'Shembade, khadoos… nay karat ka prem? Nit vichar karun sang 😌';
+          noBtn.textContent = 'Think again 😏';
+        } else if (noClicks === 2) {
+          message.textContent = 'Khota khota na 😄 One last chance!';
+          noBtn.textContent = 'Still no? 🙈';
+        } else {
+          finish('Mala mahitiye… majhi sweet booboo loves little dhungi. I love you, my sweet big dhungi ❤️');
+        }
+      });
+
+      restartBtn.addEventListener('click', resetApp);
+    })();
   </script>
 </body>
 </html>
